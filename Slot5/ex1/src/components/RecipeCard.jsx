@@ -1,15 +1,34 @@
 import { useState } from 'react';
-import { Card, Button, Modal } from 'react-bootstrap';
+import { Card, Button, Modal, Toast, ToastContainer } from 'react-bootstrap';
 
 const RecipeCard = ({ recipe }) => {
   const [showModal, setShowModal] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
+  const handleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    setShowToast(true);
+  };
+
   return (
     <>
-      <Card className="h-100 shadow-sm">
+      <Card className="h-100 shadow-sm position-relative">
+        {/* Favorite Button */}
+        <Button
+          variant="link"
+          className="position-absolute top-0 end-0 mt-2 me-2 p-1 bg-white rounded-circle shadow-sm"
+          style={{ zIndex: 10, width: '40px', height: '40px' }}
+          onClick={handleFavorite}
+        >
+          <span style={{ fontSize: '1.2rem', color: isFavorite ? '#e74c3c' : '#6c757d' }}>
+            {isFavorite ? '❤️' : '🤍'}
+          </span>
+        </Button>
+
         <Card.Img 
           variant="top" 
           src={recipe.image} 
@@ -42,16 +61,46 @@ const RecipeCard = ({ recipe }) => {
             </div>
           )}
 
-          <Button 
-            variant="success" 
-            size="sm" 
-            className="w-100"
-            onClick={handleShow}
-          >
-            View Recipe
-          </Button>
+          <div className="d-flex gap-2">
+            <Button 
+              variant="outline-danger" 
+              size="sm" 
+              className="flex-fill"
+              onClick={handleFavorite}
+            >
+              <span className="me-1">{isFavorite ? '❤️' : '🤍'}</span>
+              {isFavorite ? 'Favourited' : 'Add to Favourite'}
+            </Button>
+            <Button 
+              variant="success" 
+              size="sm" 
+              className="flex-fill"
+              onClick={handleShow}
+            >
+              View Recipe
+            </Button>
+          </div>
         </Card.Body>
       </Card>
+
+      {/* Toast Notification */}
+      <ToastContainer position="top-end" className="p-3">
+        <Toast 
+          show={showToast} 
+          onClose={() => setShowToast(false)} 
+          delay={5000} 
+          autohide
+          bg={isFavorite ? "success" : "secondary"}
+        >
+          <Toast.Header>
+            <span className="me-2">{isFavorite ? '❤️' : '🤍'}</span>
+            <strong className="me-auto">Favourites</strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">
+            {isFavorite ? 'Added to favourites!' : 'Removed from favourites!'}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
 
       {/* Recipe Detail Modal */}
       <Modal show={showModal} onHide={handleClose} size="lg" centered>
