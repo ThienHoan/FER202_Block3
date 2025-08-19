@@ -4,9 +4,22 @@ import './App.css'
 
 function App() {
   // Hàm xử lý khi form được submit
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = async (formData) => {
     console.log('Form data received:', formData);
-    // Bạn có thể xử lý dữ liệu ở đây (gửi lên server, lưu vào database, etc.)
+    
+    // Giả lập việc gửi dữ liệu lên server
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // Giả lập 90% thành công, 10% thất bại
+        if (Math.random() > 0.1) {
+          console.log('✅ Submit successful!');
+          resolve(formData); // Thành công
+        } else {
+          console.log('❌ Submit failed!');
+          reject(new Error('Server error')); // Thất bại
+        }
+      }, 1000); // Giả lập delay 1 giây
+    });
   };
 
   return (

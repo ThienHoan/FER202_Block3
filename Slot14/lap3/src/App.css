@@ -1,0 +1,119 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App main {
+  flex: 1;
+}
+
+/* Custom card hover effects */
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Hero section gradient */
+.bg-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+/* Custom badge styles */
+.badge {
+  font-size: 0.8em;
+}
+
+/* Modal image styles */
+.modal img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+/* Filter card styles */
+.card-header h5 {
+  color: #495057;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Profile Form Styles */
+.password-toggle-btn {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-left: none !important;
+  background-color: #f8f9fa !important;
+  border-color: #ced4da !important;
+}
+
+.password-toggle-btn:hover {
+  background-color: #e9ecef !important;
+  border-color: #adb5bd !important;
+}
+
+.password-input {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.progress-bar-custom {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: #0d6efd;
+  border-bottom: 2px solid #0d6efd;
+  background-color: transparent;
+}
+
+.nav-tabs .nav-link:disabled {
+  color: #adb5bd;
+  cursor: not-allowed;
+}
+
+.profile-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.avatar-placeholder {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}

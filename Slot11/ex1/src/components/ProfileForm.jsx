@@ -4,38 +4,29 @@ import { Form, Button, Alert, Modal, Card, Container, Row, Col, Toast } from 're
 
 
 const ProfileForm = ({ onSubmit }) => {
-  // State 1: Lưu tên người dùng
   const [name, setName] = useState('');
   
-  // State 2: Lưu email
   const [email, setEmail] = useState('');
   
-  // State 3: Lưu tuổi
   const [age, setAge] = useState('');
   
-  // State 4: Hiển thị thông báo toast
   const [showToast, setShowToast] = useState(false);
   
-  // State 5: Hiển thị modal kết quả
   const [showModal, setShowModal] = useState(false);
 
-  // Hàm validation cho name
   const validateName = (nameValue) => {
     return nameValue.trim() !== '';
   };
 
-  // Hàm validation cho email
   const validateEmail = (emailValue) => {
     return emailValue.includes('@') && emailValue.trim() !== '';
   };
 
-  // Hàm validation cho age
   const validateAge = (ageValue) => {
     const numAge = parseInt(ageValue);
     return !isNaN(numAge) && numAge >= 1;
   };
 
-  // Hàm kiểm tra toàn bộ form có hợp lệ không
   const isFormValid = () => {
     return validateName(name) && validateEmail(email) && validateAge(age);
   };
@@ -59,24 +50,24 @@ const ProfileForm = ({ onSubmit }) => {
     }
   };
 
-  // Hàm xử lý khi submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Không reload trang
     
     if (isFormValid()) {
-      // Hiển thị toast
-      setShowToast(true);
-      
-      // Hiển thị modal
-      setShowModal(true);
-      
-      // Gọi hàm onSubmit từ props
-      onSubmit({ name, email, age });
-      
-      // Ẩn toast sau 3 giây
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
+      try {
+        // Gọi hàm onSubmit từ props và chờ kết quả
+        await onSubmit({ name, email, age });
+        
+        setShowToast(true);
+        setShowModal(true);
+        
+        setTimeout(() => {
+          setShowToast(false);
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Submit failed:', error);
+      }
     }
   };
 
@@ -217,6 +208,9 @@ const ProfileForm = ({ onSubmit }) => {
 
 ProfileForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  age: PropTypes.number.isRequired
 };
 
 export default ProfileForm;
