@@ -145,13 +145,10 @@ function App() {
 
   return (
     <div className="App">
-      {/* Navigation */}
       <NavbarComponent />
       
-      {/* Featured Carousel */}
       <FeaturedCarousel />
       
-      {/* Hero Section */}
       <Hero />
       
       {/* Filters Section */}
@@ -188,7 +185,6 @@ function App() {
         )}
       </Container>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

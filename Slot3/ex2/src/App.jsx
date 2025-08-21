@@ -148,7 +148,8 @@ function App() {
             <h3>1. Danh sách với Sort First Name</h3>
             <Button 
               variant="info" 
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => 
+                setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
             >
               Sort First Name: {sortOrder === 'asc' ? 'A→Z' : 'Z→A'}
             </Button>
