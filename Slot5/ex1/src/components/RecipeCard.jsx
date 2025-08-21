@@ -146,7 +146,7 @@ const RecipeCard = ({ recipe }) => {
                 <h6 className="mb-2">Nutritional Benefits:</h6>
                 <p className="small text-muted">
                   This healthy recipe is packed with nutritious ingredients that provide essential vitamins, 
-                  minerals, and antioxidants to support your wellness goals.
+                  minerals, and antioxidants to support your wellness goalsaaa.
                 </p>
               </div>
             </div>
