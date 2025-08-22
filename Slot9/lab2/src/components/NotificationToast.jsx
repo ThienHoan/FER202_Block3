@@ -1,9 +1,9 @@
-import { Toast, ToastContainer } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import { Toast, ToastContainer } from 'react-bootstrap'; // Thành phần Toast của Bootstrap
+import PropTypes from 'prop-types'; // Kiểm tra kiểu props
 
-const NotificationToast = ({ show, onClose, message, variant = 'success' }) => {
+const NotificationToast = ({ show, onClose, message, variant = 'success' }) => { // Toast thông báo tái sử dụng
   return (
-    <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+    <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}> {/* Góc trên bên phải */}
       <Toast 
         show={show} 
         onClose={onClose} 
@@ -24,11 +24,11 @@ const NotificationToast = ({ show, onClose, message, variant = 'success' }) => {
   );
 };
 
-NotificationToast.propTypes = {
-  show: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['success', 'warning', 'danger', 'info'])
+NotificationToast.propTypes = { // Kiểu props cho Toast
+  show: PropTypes.bool.isRequired, // Có hiện toast không
+  onClose: PropTypes.func.isRequired, // Hàm đóng toast
+  message: PropTypes.string.isRequired, // Nội dung hiển thị
+  variant: PropTypes.oneOf(['success', 'warning', 'danger', 'info']) // Màu nền
 };
 
-export default NotificationToast;
+export default NotificationToast; // Xuất mặc định Toast

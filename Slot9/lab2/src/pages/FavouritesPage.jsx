@@ -1,26 +1,26 @@
-import { Container, Row, Col, Alert, Button } from 'react-bootstrap';
-import { useState } from 'react';
-import MovieCard from '../components/MovieCard';
-import NotificationToast from '../components/NotificationToast';
-import { useFavourites } from '../hooks/useFavourites';
-import { movies } from '../movie.js';
+import { Container, Row, Col, Alert, Button } from 'react-bootstrap'; // UI từ Bootstrap
+import { useState } from 'react'; // Hook state React
+import MovieCard from '../components/MovieCard'; // Thẻ phim tái sử dụng
+import NotificationToast from '../components/NotificationToast'; // Toast thông báo
+import { useFavourites } from '../contexts/FavouritesContext'; // Hook context favourites
+import { movies } from '../movie.js'; // Dữ liệu phim mẫu
 
-const FavouritesPage = () => {
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [toastVariant, setToastVariant] = useState('success');
+const FavouritesPage = () => { // Trang hiển thị các phim yêu thích
+  const [showToast, setShowToast] = useState(false); // Trạng thái toast
+  const [toastMessage, setToastMessage] = useState(''); // Nội dung toast
+  const [toastVariant, setToastVariant] = useState('success'); // Loại toast
 
-  const { favourites, addToFavourites, isFavourite, clearFavourites } = useFavourites();
+  const { favourites, addToFavourites, isFavourite, clearFavourites } = useFavourites(); // Lấy dữ liệu và hành động từ context
 
-  const favouriteMovies = movies.filter(movie => favourites.includes(movie.id));
+  const favouriteMovies = movies.filter(movie => favourites.includes(movie.id)); // Lọc ra các phim thuộc danh sách yêu thích
 
-  const handleAddToFavourites = (movieId) => {
-    const movie = movies.find(m => m.id === movieId);
-    const wasFavourite = isFavourite(movieId);
+  const handleAddToFavourites = (movieId) => { // Toggle yêu thích từ trang favourites
+    const movie = movies.find(m => m.id === movieId); // Lấy thông tin phim
+    const wasFavourite = isFavourite(movieId); // Trạng thái trước khi toggle
     
-    addToFavourites(movieId);
+    addToFavourites(movieId); // Thực hiện toggle
     
-    handleShowToast(
+    handleShowToast( // Hiển thị thông báo phù hợp
       wasFavourite 
         ? `${movie.title} removed from favourites!`
         : `${movie.title} added to favourites!`,
@@ -28,30 +28,30 @@ const FavouritesPage = () => {
     );
   };
 
-  const handleClearAll = () => {
-    clearFavourites();
-    handleShowToast('All favourites cleared!', 'info');
+  const handleClearAll = () => { // Xóa toàn bộ danh sách yêu thích
+    clearFavourites(); // Gọi context để xóa
+    handleShowToast('All favourites cleared!', 'info'); // Thông báo
   };
 
-  const handleShowToast = (message, variant = 'success') => {
+  const handleShowToast = (message, variant = 'success') => { // Helper hiển thị toast
     setToastMessage(message);
     setToastVariant(variant);
     setShowToast(true);
   };
 
   return (
-    <div className="page-content">
+    <div className="page-content"> {/* Nội dung trang favourites */}
       <Container>
         <h2 className="mb-4">My Favourite Movies</h2>
         
         {favouriteMovies.length === 0 ? (
-          <Alert variant="info">
+          <Alert variant="info"> {/* Khi chưa có phim yêu thích */}
             <Alert.Heading>No favourites yet.</Alert.Heading>
             <p>Start adding movies to your favourites from the Free Movies page!</p>
           </Alert>
         ) : (
           <>
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-3"> {/* Header nhỏ */}
               <small className="text-muted">
                 You have {favouriteMovies.length} favourite movie{favouriteMovies.length !== 1 ? 's' : ''}
               </small>
@@ -59,7 +59,7 @@ const FavouritesPage = () => {
                 Clear All Favourites
               </Button>
             </div>
-            <Row>
+            <Row> {/* Lưới thẻ phim yêu thích */}
               {favouriteMovies.map(movie => (
                 <Col key={movie.id} xs={12} sm={6} lg={4} className="mb-4">
                   <MovieCard
@@ -85,4 +85,4 @@ const FavouritesPage = () => {
   );
 };
 
-export default FavouritesPage;
+export default FavouritesPage; // Xuất mặc định trang Favourites

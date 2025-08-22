@@ -1,65 +1,67 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { createContext, useContext, useState, useEffect } from 'react'; // Import các hook React cần thiết
+import PropTypes from 'prop-types'; // Import PropTypes để kiểm tra kiểu props
+import { 
+  getFavourites as getFavouritesFromStorage, // Hàm lấy danh sách yêu thích từ localStorage
+  addToFavourites as addToFavouritesInStorage, // Hàm toggle thêm/xóa ID phim vào danh sách và lưu
+  clearAllFavourites as clearAllFavouritesInStorage // Hàm xóa toàn bộ danh sách yêu thích
+} from '../utils/favouritesStorage'; // Import các tiện ích thao tác storage
 
-const FavouritesContext = createContext();
+const FavouritesContext = createContext(); // Tạo Context để chia sẻ trạng thái favourites toàn app
 
-export const useFavourites = () => {
-  const context = useContext(FavouritesContext);
-  if (!context) {
-    throw new Error('useFavourites must be used within a FavouritesProvider');
+export const useFavourites = () => { // Hook tiện dụng để lấy value từ Context
+  const context = useContext(FavouritesContext); // Lấy giá trị context hiện tại
+  if (!context) { // Nếu dùng ngoài Provider
+    throw new Error('useFavourites must be used within a FavouritesProvider'); // Thông báo lỗi rõ ràng
   }
-  return context;
+  return context; // Trả về object giá trị từ Provider
 };
 
-export const FavouritesProvider = ({ children }) => {
-  const [favourites, setFavourites] = useState([]);
+export const FavouritesProvider = ({ children }) => { // Provider bao bọc app để cung cấp context
+  const [favourites, setFavourites] = useState([]); // State lưu danh sách ID phim yêu thích
 
-  // Load favourites from localStorage on component mount
-  useEffect(() => {
-    const savedFavourites = localStorage.getItem('movieFavourites');
-    if (savedFavourites) {
-      try {
-        const parsed = JSON.parse(savedFavourites);
-        setFavourites(Array.isArray(parsed) ? parsed : []);
-      } catch (error) {
-        console.error('Error loading favourites from localStorage:', error);
-        setFavourites([]);
-      }
-    }
-  }, []);
+  // Load initial favourites
+  useEffect(() => { // Chạy 1 lần khi mount
+    setFavourites(getFavouritesFromStorage()); // Lấy dữ liệu từ localStorage
+  }, []); // Chỉ chạy một lần
 
-  // Save favourites to localStorage whenever favourites change
-  useEffect(() => {
-    localStorage.setItem('movieFavourites', JSON.stringify(favourites));
-  }, [favourites]);
+  // Sync with custom event from storage utils
+  useEffect(() => { // Lắng nghe sự kiện custom để đồng bộ giữa các component/tab
+    const handleFavouritesChanged = (event) => { // Handler khi danh sách thay đổi
+      setFavourites(event.detail); // Cập nhật state theo dữ liệu mới
+    };
+    window.addEventListener('favouritesChanged', handleFavouritesChanged); // Đăng ký lắng nghe
+    return () => window.removeEventListener('favouritesChanged', handleFavouritesChanged); // Hủy khi unmount
+  }, []); // Đăng ký một lần
 
-  const addToFavourites = (movieId) => {
-    setFavourites(prev => {
-      if (prev.includes(movieId)) {
-        return prev.filter(id => id !== movieId);
-      } else {
-        return [...prev, movieId];
-      }
-    });
+  const addToFavourites = (movieId) => { // Hàm toggle thêm/xóa một phim khỏi danh sách
+    const newFavourites = addToFavouritesInStorage(movieId); // Cập nhật trong storage và nhận danh sách mới
+    setFavourites(newFavourites); // Đồng bộ state
+    return newFavourites; // Trả về để dùng nếu cần
   };
 
-  const isFavourite = (movieId) => {
-    return favourites.includes(movieId);
+  const isFavourite = (movieId) => favourites.includes(movieId); // Kiểm tra một ID có trong danh sách không
+
+  const clearFavourites = () => { // Xóa toàn bộ danh sách yêu thích
+    const newFavourites = clearAllFavouritesInStorage(); // Cập nhật storage
+    setFavourites(newFavourites); // Cập nhật state
+    return newFavourites; // Trả về danh sách rỗng
   };
 
-  const value = {
-    favourites,
-    addToFavourites,
-    isFavourite
+  const value = { // Đóng gói giá trị cung cấp qua Context
+    favourites, // Mảng ID phim yêu thích hiện tại
+    addToFavourites, // Hàm toggle yêu thích
+    isFavourite, // Hàm kiểm tra yêu thích
+    clearFavourites, // Hàm xóa hết
+    favouritesCount: favourites.length // Số lượng phim yêu thích
   };
 
   return (
-    <FavouritesContext.Provider value={value}>
-      {children}
+    <FavouritesContext.Provider value={value}> {/* Cung cấp value cho cây component */}
+      {children} {/* Render các component con */}
     </FavouritesContext.Provider>
   );
 };
 
-FavouritesProvider.propTypes = {
-  children: PropTypes.node.isRequired
+FavouritesProvider.propTypes = { // Kiểm tra kiểu cho props children
+  children: PropTypes.node.isRequired // Bắt buộc phải có children
 };

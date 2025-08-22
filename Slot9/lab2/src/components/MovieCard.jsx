@@ -1,40 +1,40 @@
-import { Card, Button, Badge, Modal } from 'react-bootstrap';
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { Card, Button, Badge, Modal } from 'react-bootstrap'; // Thành phần UI Bootstrap
+import { useState } from 'react'; // Hook state React
+import PropTypes from 'prop-types'; // Kiểm tra kiểu props
 
-const MovieCard = ({ movie, onAddToFavourites, isFavourite, onShowToast }) => {
-  const [showModal, setShowModal] = useState(false);
+const MovieCard = ({ movie, onAddToFavourites, isFavourite, onShowToast }) => { // Thẻ hiển thị phim
+  const [showModal, setShowModal] = useState(false); // Trạng thái mở modal chi tiết
 
-  const handleAddToFavourites = () => {
+  const handleAddToFavourites = () => { // Nhấn nút toggle favourites
     onAddToFavourites(movie.id);
   };
 
-  const truncateDescription = (text, maxLength = 100) => {
+  const truncateDescription = (text, maxLength = 100) => { // Rút gọn mô tả dài
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
   return (
     <>
-      <Card className="h-100 shadow-sm movie-card">
+      <Card className="h-100 shadow-sm movie-card"> {/* Card phim */}
         <Card.Img 
           variant="top" 
           src={movie.poster} 
           alt={`${movie.title} poster`}
         />
-        <Card.Body className="d-flex flex-column">
+        <Card.Body className="d-flex flex-column"> {/* Nội dung card */}
           <Card.Title className="mb-2">{movie.title}</Card.Title>
-          <Card.Text className="flex-grow-1">
+          <Card.Text className="flex-grow-1"> {/* Mô tả rút gọn */}
             {truncateDescription(movie.description)}
           </Card.Text>
           
-          <div className="mb-2">
+          <div className="mb-2"> {/* Thông tin phụ */}
             <Badge bg="primary" className="me-2">{movie.genre}</Badge>
             <small className="text-muted">
               {movie.year} • {movie.country} • {movie.duration} min
             </small>
           </div>
 
-          <div className="d-grid gap-2">
+          <div className="d-grid gap-2"> {/* Nút hành động */}
             <Button 
               variant={isFavourite ? "outline-warning" : "outline-success"}
               onClick={handleAddToFavourites}
@@ -49,7 +49,7 @@ const MovieCard = ({ movie, onAddToFavourites, isFavourite, onShowToast }) => {
       </Card>
 
       {/* Modal for movie details */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg"> {/* Modal chi tiết */}
         <Modal.Header closeButton>
           <Modal.Title>{movie.title} ({movie.year})</Modal.Title>
         </Modal.Header>
@@ -94,8 +94,8 @@ const MovieCard = ({ movie, onAddToFavourites, isFavourite, onShowToast }) => {
   );
 };
 
-MovieCard.propTypes = {
-  movie: PropTypes.shape({
+MovieCard.propTypes = { // Định nghĩa kiểu props cho MovieCard
+  movie: PropTypes.shape({ // Đối tượng phim
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -105,9 +105,9 @@ MovieCard.propTypes = {
     duration: PropTypes.number.isRequired,
     country: PropTypes.string.isRequired
   }).isRequired,
-  onAddToFavourites: PropTypes.func.isRequired,
-  isFavourite: PropTypes.bool.isRequired,
-  onShowToast: PropTypes.func.isRequired
+  onAddToFavourites: PropTypes.func.isRequired, // Hàm toggle yêu thích
+  isFavourite: PropTypes.bool.isRequired, // Trạng thái yêu thích hiện tại
+  onShowToast: PropTypes.func.isRequired // Hàm hiển thị toast (nếu cần)
 };
 
-export default MovieCard;
+export default MovieCard; // Xuất mặc định MovieCard
