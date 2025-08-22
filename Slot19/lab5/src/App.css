@@ -1,0 +1,89 @@
+.App {
+  min-height: 100vh;
+  background-color: var(--bs-body-bg);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.product-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Toast positioning */
+.toast-container {
+  z-index: 1055;
+}
+
+/* Navbar brand hover effect */
+.navbar-brand:hover {
+  opacity: 0.8;
+}
+
+/* Button group spacing */
+.btn-group .btn {
+  margin-right: 2px;
+}
+
+.btn-group .btn:last-child {
+  margin-right: 0;
+}
+
+/* Ensure navbar dropdown overlays sticky content */
+.navbar .dropdown-menu.show {
+  z-index: 2000;
+}
+
+.dishes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dish-item {
+  border: 1px solid #ccc;
+  padding: 16px;
+  width: 200px;
+  text-align: center;
+}
+
+.dish-item img {
+  width: 100%;
+  height: auto;
+}
+
+.dish-item button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.dish-item button:hover {
+  background-color: #45a049;
+}
