@@ -1,0 +1,30 @@
+/* Only essential custom styles - everything else uses Bootstrap */
+.App {
+  min-height: 100vh;
+}
+
+/* Product card hover effect */
+.product-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Hero slider height */
+.hero-slide {
+  height: 400px;
+}
+
+@media (max-width: 768px) {
+  .hero-slide {
+    height: 250px;
+  }
+}
+
+/* Toast z-index */
+.toast-container {
+  z-index: 9999;
+}
