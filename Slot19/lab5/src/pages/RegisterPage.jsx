@@ -56,7 +56,8 @@ const RegisterPage = () => {
       const userData = {
         id: Date.now(),
         name: formData.name,
-        email: formData.email
+        email: formData.email,
+        password: formData.password // Include password for authentication
       };
       
       register(userData);

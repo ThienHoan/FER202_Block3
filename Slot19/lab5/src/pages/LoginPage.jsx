@@ -7,7 +7,7 @@ import { useToast } from '../context/ToastContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, authenticateUser } = useAuth();
   const { showToast } = useToast();
   
   const [formData, setFormData] = useState({
@@ -32,7 +32,19 @@ const LoginPage = () => {
     setError('');
 
     try {
-      // Simulate login API call
+      // First try to authenticate with registered users
+      const authenticatedUser = authenticateUser(formData.email, formData.password);
+      
+      if (authenticatedUser) {
+        // Login successful with registered user
+        const { password, ...userData } = authenticatedUser;
+        login(userData);
+        showToast('Login successful!', 'success');
+        navigate('/');
+        return;
+      }
+      
+      // Fallback to demo credentials
       if (formData.email === 'demo@example.com' && formData.password === 'password') {
         const userData = {
           id: 1,
@@ -43,9 +55,11 @@ const LoginPage = () => {
         login(userData);
         showToast('Login successful!', 'success');
         navigate('/');
-      } else {
-        setError('Invalid email or password. Try demo@example.com / password');
+        return;
       }
+      
+      // No valid credentials found
+      setError('Invalid email or password. Please check your credentials or try demo@example.com / password');
     } catch (err) {
       setError('Login failed. Please try again.');
     } finally {

@@ -28,7 +28,15 @@ const CartPage = () => {
       navigate('/login');
       return;
     }
-    navigate('/checkout');
+    
+    // Simulate successful checkout
+    clearCart();
+    showToast('Checkout thành công! Cảm ơn bạn đã mua hàng.', 'success');
+    
+    // Redirect to products page after successful checkout
+    setTimeout(() => {
+      navigate('/products');
+    }, 1500);
   };
 
   const handleContinueShopping = () => {
@@ -157,7 +165,7 @@ const CartPage = () => {
                   disabled={!isAuthenticated}
                 >
                   <FaCreditCard className="me-2" />
-                  {isAuthenticated ? 'Proceed to Checkout' : 'Login to Checkout'}
+                  {isAuthenticated ? 'Thanh toán ngay' : 'Login to Checkout'}
                 </Button>
                 
                 <Button

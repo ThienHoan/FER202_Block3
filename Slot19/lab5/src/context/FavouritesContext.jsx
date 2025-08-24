@@ -56,18 +56,48 @@ export function FavouritesProvider({ children }) {
 
   // Load favourites from localStorage on mount
   useEffect(() => {
-    const savedFavourites = localStorage.getItem('favourites');
-    if (savedFavourites) {
-      dispatch({ 
-        type: FAVOURITES_ACTIONS.SET_FAVOURITES, 
-        payload: JSON.parse(savedFavourites) 
-      });
+    try {
+      const savedFavourites = localStorage.getItem('favourites');
+      console.log('Loading favourites from localStorage:', savedFavourites);
+      
+      if (savedFavourites) {
+        const parsedFavourites = JSON.parse(savedFavourites);
+        console.log('Parsed favourites data:', parsedFavourites);
+        
+        if (Array.isArray(parsedFavourites)) {
+          dispatch({ 
+            type: FAVOURITES_ACTIONS.SET_FAVOURITES, 
+            payload: parsedFavourites 
+          });
+          console.log('Favourites loaded successfully with', parsedFavourites.length, 'items');
+        } else {
+          console.warn('Saved favourites is not an array, clearing localStorage');
+          localStorage.removeItem('favourites');
+        }
+      } else {
+        console.log('No saved favourites found in localStorage');
+      }
+    } catch (error) {
+      console.error('Error loading favourites from localStorage:', error);
+      // Clear corrupted data
+      localStorage.removeItem('favourites');
     }
   }, []);
 
   // Save favourites to localStorage when state changes
   useEffect(() => {
-    localStorage.setItem('favourites', JSON.stringify(state.favourites));
+    try {
+      if (state.favourites && state.favourites.length > 0) {
+        localStorage.setItem('favourites', JSON.stringify(state.favourites));
+        console.log('Favourites saved to localStorage:', state.favourites.length, 'items');
+      } else {
+        // Clear localStorage if favourites is empty
+        localStorage.removeItem('favourites');
+        console.log('Favourites cleared from localStorage (empty)');
+      }
+    } catch (error) {
+      console.error('Error saving favourites to localStorage:', error);
+    }
   }, [state.favourites]);
 
   const addToFavourites = (item) => {

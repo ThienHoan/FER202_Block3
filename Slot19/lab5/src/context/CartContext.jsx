@@ -5,6 +5,8 @@ export const CartContext = createContext();
 // Initial state
 const initialState = {
   cartItems: [],
+
+  
   loading: false
 };
 
@@ -82,15 +84,43 @@ export const CartProvider = ({ children }) => {
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('cartItems'));
-    if (savedCart) {
-      dispatch({ type: CART_ACTIONS.SET_CART, payload: savedCart });
+    try {
+      const savedCart = localStorage.getItem('cartItems');
+      console.log('Loading cart from localStorage:', savedCart);
+      
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        console.log('Parsed cart data:', parsedCart);
+        
+        if (Array.isArray(parsedCart)) {
+          dispatch({ type: CART_ACTIONS.SET_CART, payload: parsedCart });
+          console.log('Cart loaded successfully with', parsedCart.length, 'items');
+        } else {
+          console.warn('Saved cart is not an array, clearing localStorage');
+          localStorage.removeItem('cartItems');
+        }
+      } else {
+        console.log('No saved cart found in localStorage');
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      // Clear corrupted data
+      localStorage.removeItem('cartItems');
     }
   }, []);
 
   // Save cart to localStorage when state changes
   useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+    try {
+      if (state.cartItems && state.cartItems.length > 0) {
+        localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+      } else {
+        // Clear localStorage if cart is empty
+        localStorage.removeItem('cartItems');
+      }
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
   }, [state.cartItems]);
 
   const addToCart = (dish) => {
