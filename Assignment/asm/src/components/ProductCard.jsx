@@ -2,12 +2,11 @@ import React from 'react';
 import { Card, Button, Badge } from 'react-bootstrap';
 import { FaShoppingCart, FaHeart, FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useCart } from '../hooks/useCart';
-import { useWishlist } from '../hooks/useWishlist';
-import { useToast } from '../hooks/useToast';
+import { useAuth, useCart, useWishlist, useToast } from '../hooks/index';
+import PropTypes from 'prop-types';
+import { formatPricePreserve, toNumberPrice } from '../utils/price';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onDecreaseStock }) => {
   const navigate = useNavigate();
   const { user, setRedirectAfterLogin } = useAuth();
   const { addToCart } = useCart();
@@ -17,6 +16,10 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = (e) => {
     e.stopPropagation();
     addToCart(product);
+    // Giảm stock tại UI nếu có
+    if (typeof product.stock === 'number' && onDecreaseStock) {
+      onDecreaseStock(product.id, 1);
+    }
     showToast('Đã thêm vào giỏ hàng!', 'success');
   };
 
@@ -42,7 +45,7 @@ const ProductCard = ({ product }) => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/product/${product.id}`);
+    navigate(`/motorbikes/${product.id}`);
   };
 
   const handleViewWishlist = (e) => {
@@ -50,152 +53,189 @@ const ProductCard = ({ product }) => {
     navigate('/wishlist');
   };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
-
+  // Button Yêu thích (khôi phục hàm bị thiếu)
   const renderWishlistButton = () => {
     if (!user) {
       return (
         <Button
           variant="outline-danger"
           size="sm"
-          onClick={handleWishlistToggle}
-          className="w-100 mb-2"
-        >
-          <FaHeart className="me-1" />
-          <span className="d-none d-md-inline">Thêm yêu thích</span>
-          <span className="d-md-none">Yêu thích</span>
-        </Button>
-      );
-    }
-
-    if (isInWishlist(product.id)) {
-      return (
-        <Button
-          variant="danger"
-          size="sm"
           onClick={handleViewWishlist}
-          className="w-100 mb-2"
+          className="w-100"
         >
           <FaHeart className="me-1" />
-          <span className="d-none d-md-inline">Xem danh sách</span>
-          <span className="d-md-none">Đã thích</span>
+          Yêu thích
         </Button>
       );
     }
 
     return (
       <Button
-        variant="outline-danger"
+        variant={isInWishlist(product.id) ? 'danger' : 'outline-danger'}
         size="sm"
         onClick={handleWishlistToggle}
-        className="w-100 mb-2"
+        className="w-100"
       >
         <FaHeart className="me-1" />
-        <span className="d-none d-md-inline">Thêm yêu thích</span>
-        <span className="d-md-none">Yêu thích</span>
+        {isInWishlist(product.id) ? 'Đã yêu thích' : 'Thêm yêu thích'}
       </Button>
     );
   };
 
+  // Sử dụng normalized data từ config mapping
+  const title = product.title || 'Không có tên';
+  const brand = product.brand || 'Không có thương hiệu';
+  const image = product.image || '/images/default.jpg';
+  const price = product.price || 0;
+  const salePrice = product.salePrice || null;
+  const description = product.description || 'Không có mô tả';
+  const tags = product.tags || [];
+  
+  // Các trường mới có thể có
+  const stock = product.stock;
+  const rating = product.rating;
+  const year = product.year;
+  const warranty = product.warranty;
+  const colors = product.colors;
+
   return (
-    <Card className="h-100 shadow-sm border-0" style={{ width: '100%' }}>
+    <Card 
+      className="h-100 product-card shadow-sm" 
+      onClick={handleViewDetails}
+      style={{ cursor: 'pointer' }}
+    >
       <div className="position-relative">
         <Card.Img
           variant="top"
-          src={product.image}
-          alt={product.title}
-          style={{ height: '250px', objectFit: 'cover' }}
-          onClick={handleViewDetails}
-          className="rounded-top"
+          src={image}
+          alt={title}
+          style={{ height: '200px', objectFit: 'cover' }}
         />
         
         {/* Tags */}
         <div className="position-absolute top-0 start-0 p-2">
-          {product.tags?.includes('hot') && (
+          {tags.includes('hot') && (
             <Badge bg="danger" className="me-1">
               HOT
             </Badge>
           )}
-          {product.tags?.includes('sale') && (
+          {tags.includes('sale') && (
             <Badge bg="warning" text="dark">
               SALE
             </Badge>
           )}
+          {/* Hiển thị tồn kho nếu có trường stock */}
+          {typeof stock === 'number' && (
+            stock > 0 ? (
+              <Badge bg="info" className="me-1">CÒN {stock}</Badge>
+            ) : (
+              <Badge bg="secondary" className="me-1">HẾT HÀNG</Badge>
+            )
+          )}
         </div>
       </div>
 
-      <Card.Body className="d-flex flex-column p-3">
-        <div className="flex-grow-1 text-center" onClick={handleViewDetails} style={{ cursor: 'pointer' }}>
-          <Card.Title 
-            className="h6 mb-2" 
-            style={{ 
-              height: '3rem', 
-              overflow: 'hidden', 
-              display: '-webkit-box', 
-              WebkitLineClamp: 2, 
-              WebkitBoxOrient: 'vertical',
-              lineHeight: '1.5rem'
-            }}
-          >
-            {product.title}
-          </Card.Title>
-          
-          <Card.Subtitle className="mb-3 text-muted small">
-            {product.name}
-          </Card.Subtitle>
-          
-          <div className="mb-3">
-            {product.salePrice ? (
-              <div>
-                <div className="fw-bold text-danger fs-5 mb-1">
-                  {formatPrice(product.salePrice)}
-                </div>
-                <div className="text-muted text-decoration-line-through small">
-                  {formatPrice(product.price)}
-                </div>
-              </div>
-            ) : (
-              <div className="fw-bold text-primary fs-5">
-                {formatPrice(product.price)}
-              </div>
-            )}
+      <Card.Body className="d-flex flex-column">
+        <Card.Title className="h6 mb-2 text-truncate">
+          {title}
+        </Card.Title>
+        
+        <Card.Text className="text-muted small mb-2">
+          {brand}
+        </Card.Text>
+        
+        <Card.Text className="small text-muted mb-2 line-clamp-2">
+          {description}
+        </Card.Text>
+
+        {/* Hiển thị các thông tin mới nếu có */}
+        {year && (
+          <Card.Text className="small text-muted mb-1">
+            Năm: {year}
+          </Card.Text>
+        )}
+        
+        {warranty && (
+          <Card.Text className="small text-muted mb-1">
+            Bảo hành: {warranty}
+          </Card.Text>
+        )}
+        
+        {colors && colors.length > 0 && (
+          <Card.Text className="small text-muted mb-1">
+            Màu: {colors.join(', ')}
+          </Card.Text>
+        )}
+        
+        {typeof stock === 'number' && (
+          <Card.Text className="small text-muted mb-1">
+            Tồn kho: {stock > 0 ? stock : 'Hết hàng'}
+          </Card.Text>
+        )}
+        
+        {rating > 0 && (
+          <div className="mb-2">
+            <span className="text-warning">★</span>
+            <span className="small text-muted ms-1">{rating}/5</span>
           </div>
+        )}
+
+        <div className="price-section mb-3">
+          {salePrice ? (
+            <>
+              <div className="fw-bold text-danger fs-5">
+                {formatPricePreserve(salePrice)}
+              </div>
+              <div className="text-muted text-decoration-line-through">
+                {formatPricePreserve(price)}
+              </div>
+            </>
+          ) : (
+            <div className="fw-bold fs-5">
+              {formatPricePreserve(price)}
+            </div>
+          )}
         </div>
 
         <div className="mt-auto">
-          <div className="d-grid gap-2">
-            {renderWishlistButton()}
-            
-            <div className="d-flex gap-2">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleAddToCart}
-                className="flex-fill"
-              >
-                <FaShoppingCart className="me-1" />
-                Thêm giỏ hàng
-              </Button>
-              
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={handleViewDetails}
-                className="d-flex align-items-center justify-content-center px-3"
-              >
-                <FaEye />
-              </Button>
-            </div>
-          </div>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleAddToCart}
+            className="w-100 mb-2"
+          >
+            <FaShoppingCart className="me-1" />
+            Thêm vào giỏ
+          </Button>
+          
+          {renderWishlistButton()}
         </div>
       </Card.Body>
     </Card>
   );
+};
+
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    brand: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    salePrice: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    description: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
+    // Các trường mới
+    stock: PropTypes.number,
+    rating: PropTypes.number,
+    year: PropTypes.number,
+    warranty: PropTypes.string,
+    colors: PropTypes.arrayOf(PropTypes.string),
+    isNew: PropTypes.bool,
+    isHot: PropTypes.bool,
+    isSale: PropTypes.bool
+  }).isRequired,
+  onDecreaseStock: PropTypes.func
 };
 
 export default ProductCard;

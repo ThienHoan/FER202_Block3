@@ -2,10 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { FaShoppingCart, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useWishlist } from '../hooks/useWishlist';
-import { useCart } from '../hooks/useCart';
-import { useToast } from '../hooks/useToast';
+import { useToast, useCart, useWishlist, useAuth} from '../hooks/index';
 
 const WishlistPage = () => {
   const { user } = useAuth();
@@ -32,10 +29,30 @@ const WishlistPage = () => {
   };
 
   const formatPrice = (price) => {
+    // Xử lý price có thể là string hoặc number
+    let numericPrice;
+    
+    if (typeof price === 'string') {
+      // Loại bỏ ký hiệu $ và các ký tự không phải số
+      const cleanPrice = price.replace(/[^0-9.-]+/g, '');
+      numericPrice = parseFloat(cleanPrice);
+      
+      // Kiểm tra nếu parseFloat trả về NaN
+      if (isNaN(numericPrice)) {
+        console.warn('Không thể parse giá:', price);
+        return 'Giá không hợp lệ';
+      }
+    } else if (typeof price === 'number') {
+      numericPrice = price;
+    } else {
+      console.warn('Kiểu dữ liệu giá không hợp lệ:', typeof price, price);
+      return 'Giá không hợp lệ';
+    }
+    
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
-    }).format(price);
+    }).format(numericPrice);
   };
 
   if (!user) {
@@ -109,7 +126,7 @@ const WishlistPage = () => {
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => navigate(`/product/${product.id}`)}
+                      onClick={() => navigate(`/motorbikes/${product.id}`)}
                       className="w-100"
                     >
                       Xem chi tiết

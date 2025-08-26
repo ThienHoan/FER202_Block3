@@ -2,10 +2,9 @@ import React from 'react';
 import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { FaShoppingCart, FaHeart, FaUser, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
-import { useAuth } from '../hooks/useAuth';
-import { useCart } from '../hooks/useCart';
-import { useWishlist } from '../hooks/useWishlist';
+import { useAuth, useCart, useWishlist } from '../hooks/index';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -23,7 +22,7 @@ const Header = () => {
       <Container>
         <LinkContainer to="/">
           <Navbar.Brand className="fw-bold">
-            📱 PhoneStore
+            📱 BikesStore
           </Navbar.Brand>
         </LinkContainer>
         
@@ -114,5 +113,7 @@ const Header = () => {
     </Navbar>
   );
 };
+
+// Header không cần PropTypes vì không nhận props
 
 export default Header;

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useToast } from '../hooks/useToast';
+import { useToast, useAuth} from '../hooks/index';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -40,10 +39,9 @@ const LoginPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    // Cho phép nhập email hoặc tên đăng nhập => chỉ cần không rỗng
     if (!formData.email.trim()) {
-      newErrors.email = 'Email là bắt buộc';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email không hợp lệ';
+      newErrors.email = 'Vui lòng nhập email hoặc tên đăng nhập';
     }
 
     if (!formData.password) {
@@ -114,14 +112,14 @@ const LoginPage = () => {
               
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>Email hoặc Tên đăng nhập</Form.Label>
                   <Form.Control
-                    type="email"
+                    type="text"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     isInvalid={!!errors.email}
-                    placeholder="Nhập email của bạn"
+                    placeholder="Nhập email hoặc tên đăng nhập"
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.email}

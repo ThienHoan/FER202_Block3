@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, ProgressBar, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useToast } from '../hooks/useToast';
+import { useToast, useAuth} from '../hooks/index';
 
 const RegisterPage = () => {
   const [currentStep, setCurrentStep] = useState(1);

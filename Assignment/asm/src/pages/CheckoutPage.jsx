@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Table, Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useCart } from '../hooks/useCart';
-import { useToast } from '../hooks/useToast';
+import { useToast, useCart, useAuth} from '../hooks/index';
+import { orderAPI } from '../services/api';
+import { toNumberPrice, formatPricePreserve, detectCurrency, formatWithCurrency } from '../utils/price';
 
 const CheckoutPage = () => {
   const { user } = useAuth();
@@ -27,12 +27,8 @@ const CheckoutPage = () => {
     }
   }, [items.length, navigate]);
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
+  const formatPrice = (price) => formatPricePreserve(price);
+  const currency = detectCurrency(typeof items[0]?.price === 'string' ? items[0]?.price : '');
 
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
@@ -44,9 +40,9 @@ const CheckoutPage = () => {
         items: items.map(item => ({
           id: item.id,
           title: item.title,
-          price: item.price,
+          price: toNumberPrice(item.price),
           qty: item.qty,
-          total: item.price * item.qty
+          total: toNumberPrice(item.price) * item.qty
         })),
         total: subtotal,
         date: new Date().toISOString(),
@@ -54,16 +50,10 @@ const CheckoutPage = () => {
       };
 
       // Save order to JSON server
-      const response = await fetch('http://localhost:5000/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
-      });
+      const response = await orderAPI.create(orderData);
 
-      if (response.ok) {
-        const order = await response.json();
+      if (response.status === 201) {
+        const order = response.data;
         
         // Clear cart
         clearCart();
@@ -110,7 +100,7 @@ const CheckoutPage = () => {
                   {items.map((item) => (
                     <tr key={item.id}>
                       <td>
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align_items-center">
                           <img
                             src={item.image}
                             alt={item.title}
@@ -129,7 +119,7 @@ const CheckoutPage = () => {
                         {item.qty}
                       </td>
                       <td className="align-middle fw-bold">
-                        {formatPrice(item.price * item.qty)}
+                        {formatPrice(toNumberPrice(item.price) * item.qty)}
                       </td>
                     </tr>
                   ))}
@@ -196,7 +186,7 @@ const CheckoutPage = () => {
             <Card.Body>
               <div className="d-flex justify-content-between mb-2">
                 <span>Tạm tính:</span>
-                <span>{formatPrice(subtotal)}</span>
+                <span>{formatWithCurrency(subtotal, currency)}</span>
               </div>
               <div className="d-flex justify-content-between mb-2">
                 <span>Phí vận chuyển:</span>
@@ -209,7 +199,7 @@ const CheckoutPage = () => {
               <hr />
               <div className="d-flex justify-content-between mb-3">
                 <strong>Tổng cộng:</strong>
-                <strong className="text-danger">{formatPrice(subtotal)}</strong>
+                <strong className="text-danger">{formatWithCurrency(subtotal, currency)}</strong>
               </div>
 
               <Alert variant="info" className="small">

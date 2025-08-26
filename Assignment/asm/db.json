@@ -1,186 +1,83 @@
 {
-  "accounts": [
+  "Motorbikes": [
     {
       "id": "1",
-      "username": "thienhoan",
-      "email": "thienhoan@example.com",
-      "password": "123456",
-      "secretQuestion": "Tên con vật nuôi đầu tiên của bạn là gì?",
-      "answer": "Milu"
+      "brand": "Honda",
+      "model": "Winner X",
+      "year": 2022,
+      "price": "$1500",
+      "image": "/images/winnerx.jpg",
+      "description": "A sporty underbone motorbike with aggressive design and powerful engine.",
+      "stock": 10
     },
     {
       "id": "2",
-      "username": "khadong",
-      "email": "kha.dong@example.com",
-      "password": "password123",
-      "secretQuestion": "Bạn sinh ra ở thành phố nào?",
-      "answer": "Da Nang"
+      "brand": "Yamaha",
+      "model": "Exciter 155",
+      "year": 2023,
+      "price": "$1700",
+      "image": "/images/exciter155.jpg",
+      "description": "A performance-focused motorbike suitable for daily use and racing enthusiasts.",
+      "stock": 21
     },
     {
       "id": "3",
-      "username": "lamvu",
-      "email": "lam.vu@example.com",
-      "password": "abc@123",
-      "secretQuestion": "Món ăn yêu thích của bạn là gì?",
-      "answer": "Pho"
+      "brand": "Suzuki",
+      "model": "Raider R150",
+      "year": 2021,
+      "price": "$1400",
+      "image": "/images/raider.jpg",
+      "description": "A lightweight and agile motorbike ideal for city commuting.",
+      "stock": 10
     },
     {
       "id": "4",
-      "username": "vuhoang",
-      "email": "vu.hoang@example.com",
-      "password": "hoang2025",
-      "secretQuestion": "Tên trường tiểu học của bạn là gì?",
-      "answer": "Hoa Sen"
-    },
-    {
-      "id": "5",
-      "username": "dongle",
-      "email": "dong.le@example.com",
-      "password": "dongle!99",
-      "secretQuestion": "Tên bạn thân nhất của bạn là gì?",
-      "answer": "Minh"
-    },
-    {
-      "id": "6",
-      "username": "hello",
-      "email": "Hoan64735@gmial.com",
-      "password": "123123123Tt@",
-      "secretQuestion": "Tên con vật nuôi đầu tiên của bạn là gì?",
-      "answer": "chó"
+      "brand": "Piaggio",
+      "model": "Liberty ABS",
+      "year": 2020,
+      "price": "1800$",
+      "image": "/images/liberty.jpg",
+      "description": "A premium scooter with stylish European design and ABS braking system.",
+      "stock": 11
     }
   ],
-  "products": [
+  "UserAccounts": [
     {
       "id": "1",
-      "title": "iPhone 15 Pro Max",
-      "name": "Apple",
-      "image": "/images/iphone15promax.jpg",
-      "price": 1199,
-      "salePrice": 1099,
-      "description": "Flagship Apple với chip A17 Pro, màn hình 6.7\" Super Retina XDR.",
-      "tags": [
-        "hot",
-        "sale"
-      ]
+      "username": "admin",
+      "password": "admin123",
+      "account_type": "admin",
+      "status": "active"
     },
     {
       "id": "2",
-      "title": "iPhone 14",
-      "name": "Apple",
-      "image": "/images/iphone14.jpg",
-      "price": 799,
-      "salePrice": 749,
-      "description": "Thiết kế quen thuộc, chip A15 Bionic, camera kép chất lượng.",
-      "tags": [
-        "sale"
-      ]
+      "username": "john",
+      "password": "johnpass",
+      "account_type": "user",
+      "status": "active"
     },
     {
       "id": "3",
-      "title": "iPhone 13 Mini",
-      "name": "Apple",
-      "image": "/images/iphone13mini.jpg",
-      "price": 699,
-      "description": "Nhỏ gọn 5.4\", hiệu năng mạnh mẽ, pin được cải thiện.",
-      "tags": []
+      "username": "jane",
+      "password": "janepass",
+      "account_type": "user",
+      "status": "inactive"
     },
     {
       "id": "4",
-      "title": "Samsung Galaxy S23 Ultra",
-      "name": "Samsung",
-      "image": "/images/galaxys23ultra.jpg",
-      "price": 1199,
-      "salePrice": 999,
-      "description": "Flagship với S-Pen, camera 200MP, Snapdragon 8 Gen 2.",
-      "tags": [
-        "hot",
-        "sale"
-      ]
+      "username": "guest",
+      "password": "guestpass",
+      "account_type": "guest",
+      "status": "active"
     },
     {
       "id": "5",
-      "title": "Samsung Galaxy Z Fold 5",
-      "name": "Samsung",
-      "image": "/images/galaxyzfold5.jpg",
-      "price": 1799,
-      "description": "Điện thoại gập 7.6\", đa nhiệm mạnh, thiết kế cao cấp.",
-      "tags": [
-        "hot"
-      ]
-    },
-    {
-      "id": "6",
-      "title": "Samsung Galaxy A54",
-      "name": "Samsung",
-      "image": "/images/galaxya54.jpg",
-      "price": 449,
-      "salePrice": 399,
-      "description": "Tầm trung nổi bật với màn AMOLED, pin 5000mAh.",
-      "tags": [
-        "sale"
-      ]
-    },
-    {
-      "id": "7",
-      "title": "Xiaomi 13 Pro",
-      "name": "Xiaomi",
-      "image": "/images/xiaomi13pro.jpg",
-      "price": 899,
-      "description": "Camera hợp tác Leica, chip Snapdragon 8 Gen 2, sạc nhanh 120W.",
-      "tags": [
-        "hot"
-      ]
-    },
-    {
-      "id": "8",
-      "title": "Xiaomi Redmi Note 12",
-      "name": "Xiaomi",
-      "image": "/images/redminote12.jpg",
-      "price": 299,
-      "salePrice": 249,
-      "description": "Phân khúc phổ thông, màn AMOLED 120Hz, pin 5000mAh.",
-      "tags": [
-        "sale"
-      ]
-    },
-    {
-      "id": "9",
-      "title": "Oppo Find X6 Pro",
-      "name": "Oppo",
-      "image": "/images/oppofindx6pro.jpg",
-      "price": 1099,
-      "description": "Camera Hasselblad, màn 2K 120Hz, sạc nhanh 100W.",
-      "tags": []
-    },
-    {
-      "id": "10",
-      "title": "Vivo X90 Pro+",
-      "name": "Vivo",
-      "image": "/images/vivox90pro.jpg",
-      "price": 999,
-      "description": "Chụp ảnh mạnh mẽ với ZEISS optics, Snapdragon 8 Gen 2.",
-      "tags": []
-    },
-    {
-      "id": "11",
-      "title": "Google Pixel 7 Pro",
-      "name": "Google",
-      "image": "/images/pixel7pro.jpg",
-      "price": 899,
-      "salePrice": 849,
-      "description": "Camera AI xuất sắc, Android gốc, chip Tensor G2.",
-      "tags": [
-        "sale"
-      ]
-    },
-    {
-      "id": "12",
-      "title": "OnePlus 11",
-      "name": "OnePlus",
-      "image": "/images/oneplus11.jpg",
-      "price": 699,
-      "description": "Thiết kế đẹp, Snapdragon 8 Gen 2, sạc nhanh 100W.",
-      "tags": []
+      "username": "admin2",
+      "email": "kali@gmail.com",
+      "password": "Tt123123@",
+      "secretQuestion": "Tên con vật nuôi đầu tiên của bạn là gì?",
+      "answer": "chó",
+      "status": "active"
     }
   ],
   "orders": [
@@ -251,6 +148,91 @@
       ],
       "total": 1698,
       "date": "2025-08-24T16:10:04.717Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "1881",
+      "userId": "1",
+      "items": [
+        {
+          "id": "3",
+          "title": "iPhone 13 Mini",
+          "price": 699,
+          "qty": 2,
+          "total": 1398
+        }
+      ],
+      "total": 1398,
+      "date": "2025-08-25T04:10:36.461Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "a284",
+      "userId": "1",
+      "items": [
+        {
+          "id": "3",
+          "title": "iPhone 13 Mini",
+          "price": 699,
+          "qty": 2,
+          "total": 1398
+        },
+        {
+          "id": "7",
+          "title": "Xiaomi 13 Pro",
+          "price": 899,
+          "qty": 2,
+          "total": 1798
+        },
+        {
+          "id": "8",
+          "title": "Xiaomi Redmi Note 12",
+          "price": 249,
+          "qty": 1,
+          "total": 249
+        }
+      ],
+      "total": 3445,
+      "date": "2025-08-25T07:08:45.920Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "6d7b",
+      "userId": "3",
+      "items": [
+        {
+          "id": "2",
+          "title": "Exciter 155",
+          "price": 1700,
+          "qty": 1,
+          "total": 1700
+        }
+      ],
+      "total": 1700,
+      "date": "2025-08-25T09:12:27.262Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "29cb",
+      "userId": 5,
+      "items": [
+        {
+          "id": "4",
+          "title": "Liberty ABS",
+          "price": 1800,
+          "qty": 1,
+          "total": 1800
+        },
+        {
+          "id": "3",
+          "title": "Raider R150",
+          "price": 1400,
+          "qty": 1,
+          "total": 1400
+        }
+      ],
+      "total": 3200,
+      "date": "2025-08-26T02:04:07.920Z",
       "status": "confirmed"
     }
   ]

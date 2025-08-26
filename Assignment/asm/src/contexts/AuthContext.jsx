@@ -1,4 +1,6 @@
 import React, { createContext, useReducer, useEffect, useCallback } from 'react';
+import { accountAPI } from '../services/api';
+import PropTypes from 'prop-types';
 
 // Initial state
 const initialState = {
@@ -89,36 +91,45 @@ export const AuthProvider = ({ children }) => {
     }
   }, [state.user]);
 
-  const login = async (email, password) => {
+  // Cho phép đăng nhập bằng email hoặc username và chặn tài khoản inactive
+  const login = async (emailOrUsername, password) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START });
     
     try {
       // Fetch accounts from JSON server
-      const response = await fetch('http://localhost:5000/accounts');
-      const accounts = await response.json();
+      const response = await accountAPI.getAll();
+      const accounts = response.data;
       
-      // Find matching account
-      const account = accounts.find(acc => 
-        acc.email === email && acc.password === password
-      );
+      // Normalize input
+      const input = (emailOrUsername || '').trim();
+      const inputLower = input.toLowerCase();
+      
+      // Find account by email or username
+      const account = accounts.find(acc => {
+        const accEmail = (acc.email || '').toLowerCase();
+        const accUsername = (acc.username || '').toLowerCase();
+        return (accEmail === inputLower || accUsername === inputLower) && acc.password === password;
+      });
 
-      if (account) {
-        const user = {
-          id: account.id,
-          name: account.username,
-          email: account.email
-        };
-        
-        dispatch({
-          type: AUTH_ACTIONS.LOGIN_SUCCESS,
-          payload: user
-        });
-        
-        return { success: true, user };
-      } else {
+      if (!account) {
         dispatch({ type: AUTH_ACTIONS.LOGIN_FAILURE });
-        return { success: false, message: 'Email hoặc mật khẩu không đúng' };
+        return { success: false, message: 'Thông tin đăng nhập không đúng' };
       }
+
+      // Check status (allow only active when field exists)
+      if (typeof account.status === 'string' && account.status.toLowerCase() !== 'active') {
+        dispatch({ type: AUTH_ACTIONS.LOGIN_FAILURE });
+        return { success: false, message: 'Tài khoản của bạn đang không hoạt động' };
+      }
+
+      const user = {
+        id: account.id,
+        name: account.username || account.fullName || 'User',
+        email: account.email || ''
+      };
+      
+      dispatch({ type: AUTH_ACTIONS.LOGIN_SUCCESS, payload: user });
+      return { success: true, user };
     } catch {
       dispatch({ type: AUTH_ACTIONS.LOGIN_FAILURE });
       return { success: false, message: 'Lỗi kết nối server' };
@@ -130,8 +141,8 @@ export const AuthProvider = ({ children }) => {
     
     try {
       // Fetch existing accounts to get next ID
-      const response = await fetch('http://localhost:5000/accounts');
-      const accounts = await response.json();
+      const response = await accountAPI.getAll();
+      const accounts = response.data;
       
       // Check if email already exists
       const existingAccount = accounts.find(acc => acc.email === userData.email);
@@ -157,19 +168,14 @@ export const AuthProvider = ({ children }) => {
         email: userData.email,
         password: userData.password,
         secretQuestion: userData.secretQuestion,
-        answer: userData.answer
+        answer: userData.answer,
+        status: 'active'
       };
 
       // Save to JSON server
-      const createResponse = await fetch('http://localhost:5000/accounts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newAccount)
-      });
+      const createResponse = await accountAPI.create(newAccount);
 
-      if (createResponse.ok) {
+      if (createResponse.status === 201) {
         const user = {
           id: newAccount.id,
           name: newAccount.username,
@@ -226,6 +232,10 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default AuthContext;

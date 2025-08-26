@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useEffect, useState } from 'react';
+import React, { createContext, useReducer, useEffect, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 
 // Initial state
 const initialState = {
@@ -13,6 +14,15 @@ const CART_ACTIONS = {
   DECREASE_QUANTITY: 'DECREASE_QUANTITY',
   CLEAR_CART: 'CLEAR_CART',
   LOAD_CART: 'LOAD_CART'
+};
+
+// Helper: convert price (number | "$123") to number
+const toNumberPrice = (price) => {
+  if (price == null) return 0;
+  if (typeof price === 'number') return price;
+  const cleaned = String(price).replace(/[^0-9.-]+/g, '');
+  const parsed = parseFloat(cleaned);
+  return Number.isNaN(parsed) ? 0 : parsed;
 };
 
 // Reducer
@@ -143,7 +153,7 @@ export const CartProvider = ({ children }) => {
 
   // Derived values
   const count = state.items.reduce((total, item) => total + item.qty, 0);
-  const subtotal = state.items.reduce((total, item) => total + (item.price * item.qty), 0);
+  const subtotal = state.items.reduce((total, item) => total + (toNumberPrice(item.price) * item.qty), 0);
 
   const value = {
     items: state.items,
@@ -161,6 +171,10 @@ export const CartProvider = ({ children }) => {
       {children}
     </CartContext.Provider>
   );
+};
+
+CartProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default CartContext;

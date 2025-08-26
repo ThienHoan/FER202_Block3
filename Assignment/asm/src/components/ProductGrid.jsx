@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import ProductCard from './ProductCard';
 import NavBar from './NavBar';
+import { productAPI } from '../services/api';
 
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
@@ -15,12 +16,8 @@ const ProductGrid = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/products');
-        if (!response.ok) {
-          throw new Error('Lỗi tải dữ liệu sản phẩm');
-        }
-        const data = await response.json();
-        setProducts(data);
+        const response = await productAPI.getAll();
+        setProducts(response.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -31,37 +28,87 @@ const ProductGrid = () => {
     fetchProducts();
   }, []);
 
+  // Helper: convert price (number | "$123") to number
+  const toNumberPrice = (price) => {
+    if (price == null) return 0;
+    if (typeof price === 'number') return price;
+    const cleaned = String(price).replace(/[^0-9.-]+/g, '');
+    const parsed = parseFloat(cleaned);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
+  // Điều chỉnh stock cục bộ và sync server theo delta (+/-)
+  const adjustStock = useCallback(async (productId, delta) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === productId && typeof p.stock === 'number') {
+        return { ...p, stock: Math.max(0, p.stock + delta) };
+      }
+      return p;
+    }));
+
+    try {
+      const current = products.find(p => p.id === productId);
+      const currentStock = typeof current?.stock === 'number' ? current.stock : null;
+      if (currentStock !== null) {
+        const newStock = Math.max(0, currentStock + delta);
+        await productAPI.update(productId, { stock: newStock });
+      }
+    } catch (e) {
+      console.warn('Không thể cập nhật stock trên server:', e?.message || e);
+    }
+  }, [products]);
+
+  // Giảm stock khi add to cart từ ProductCard
+  const handleDecreaseStock = useCallback(async (productId, decreaseBy = 1) => {
+    await adjustStock(productId, -Math.abs(decreaseBy));
+  }, [adjustStock]);
+
+  // Lắng nghe sự kiện toàn cục từ CartPage để tăng/giảm stock
+  useEffect(() => {
+    const handler = (e) => {
+      const { productId, delta } = e.detail || {};
+      if (!productId || !delta) return;
+      adjustStock(productId, delta);
+    };
+    window.addEventListener('stock-adjust', handler);
+    return () => window.removeEventListener('stock-adjust', handler);
+  }, [adjustStock]);
+
   // Filter and sort products using useMemo
   const visibleProducts = useMemo(() => {
-    let filtered = products;
+    let filtered = products || [];
 
     // Filter by search query
     if (searchQuery.trim()) {
-      filtered = filtered.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter((product) => {
+        const title = (product?.title || '').toLowerCase();
+        const brand = (product?.brand || '').toLowerCase();
+        return title.includes(q) || brand.includes(q);
+      });
     }
 
     // Sort products
     switch (sortBy) {
       case 'name-asc':
-        filtered = [...filtered].sort((a, b) => a.title.localeCompare(b.title));
+        filtered = [...filtered].sort((a, b) => (a.title || '').localeCompare(b.title || ''));
         break;
-      case 'price-asc':
+      case 'price-asc': {
         filtered = [...filtered].sort((a, b) => {
-          const priceA = a.salePrice || a.price;
-          const priceB = b.salePrice || b.price;
+          const priceA = toNumberPrice(a.salePrice ?? a.price);
+          const priceB = toNumberPrice(b.salePrice ?? b.price);
           return priceA - priceB;
         });
         break;
-      case 'price-desc':
+      }
+      case 'price-desc': {
         filtered = [...filtered].sort((a, b) => {
-          const priceA = a.salePrice || a.price;
-          const priceB = b.salePrice || b.price;
+          const priceA = toNumberPrice(a.salePrice ?? a.price);
+          const priceB = toNumberPrice(b.salePrice ?? b.price);
           return priceB - priceA;
         });
         break;
+      }
       default:
         // Keep original order
         break;
@@ -136,7 +183,7 @@ const ProductGrid = () => {
                 lg={3}
                 className="d-flex justify-content-center"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} onDecreaseStock={handleDecreaseStock} />
               </Col>
             ))}
           </Row>
@@ -145,5 +192,7 @@ const ProductGrid = () => {
     </>
   );
 };
+
+// ProductGrid không cần PropTypes vì không nhận props
 
 export default ProductGrid;

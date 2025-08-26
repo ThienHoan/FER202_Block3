@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Alert, Button, Table } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
+import { orderAPI } from '../services/api';
 
 const OrderConfirmationPage = () => {
   const { orderId } = useParams();
@@ -13,12 +14,8 @@ const OrderConfirmationPage = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/orders/${orderId}`);
-        if (!response.ok) {
-          throw new Error('Không tìm thấy đơn hàng');
-        }
-        const data = await response.json();
-        setOrder(data);
+        const response = await orderAPI.getById(orderId);
+        setOrder(response.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -32,10 +29,30 @@ const OrderConfirmationPage = () => {
   }, [orderId]);
 
   const formatPrice = (price) => {
+    // Xử lý price có thể là string hoặc number
+    let numericPrice;
+    
+    if (typeof price === 'string') {
+      // Loại bỏ ký hiệu $ và các ký tự không phải số
+      const cleanPrice = price.replace(/[^0-9.-]+/g, '');
+      numericPrice = parseFloat(cleanPrice);
+      
+      // Kiểm tra nếu parseFloat trả về NaN
+      if (isNaN(numericPrice)) {
+        console.warn('Không thể parse giá:', price);
+        return 'Giá không hợp lệ';
+      }
+    } else if (typeof price === 'number') {
+      numericPrice = price;
+    } else {
+      console.warn('Kiểu dữ liệu giá không hợp lệ:', typeof price, price);
+      return 'Giá không hợp lệ';
+    }
+    
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
-    }).format(price);
+    }).format(numericPrice);
   };
 
   const formatDate = (dateString) => {

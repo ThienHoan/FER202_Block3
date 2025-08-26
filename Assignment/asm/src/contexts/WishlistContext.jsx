@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useEffect, useState } from 'react';
+import React, { createContext, useReducer, useEffect, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 
 // Initial state
 const initialState = {
@@ -113,6 +114,10 @@ export const WishlistProvider = ({ children }) => {
       {children}
     </WishlistContext.Provider>
   );
+};
+
+WishlistProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default WishlistContext;

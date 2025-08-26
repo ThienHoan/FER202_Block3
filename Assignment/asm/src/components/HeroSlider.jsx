@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const HeroSlider = () => {
   const [index, setIndex] = useState(0);
@@ -9,14 +10,14 @@ const HeroSlider = () => {
     {
       id: 1,
       image: '/images/banner1.jpg',
-      title: 'iPhone 15 Pro Max',
+      title: 'Raider R150',
       subtitle: 'Titanium. So strong. So light. So Pro.',
       alt: 'iPhone 15 Pro Max Banner'
     },
     {
       id: 2,
       image: '/images/banner2.jpg',
-      title: 'Samsung Galaxy S23 Ultra',
+      title: 'Exciter 155',
       subtitle: 'Share the Epic',
       alt: 'Samsung Galaxy S23 Ultra Banner'
     },
@@ -76,5 +77,7 @@ const HeroSlider = () => {
     </div>
   );
 };
+
+// HeroSlider không cần PropTypes vì không nhận props
 
 export default HeroSlider;

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useCallback } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const ToastContext = createContext();
 
@@ -47,6 +48,10 @@ export const ToastProvider = ({ children }) => {
       </ToastContainer>
     </ToastContext.Provider>
   );
+};
+
+ToastProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default ToastContext;

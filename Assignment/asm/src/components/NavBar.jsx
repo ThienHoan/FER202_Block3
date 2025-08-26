@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
 const NavBar = ({ onSearchChange, onSortChange, searchQuery, sortBy }) => {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
@@ -60,6 +61,13 @@ const NavBar = ({ onSearchChange, onSortChange, searchQuery, sortBy }) => {
       </Container>
     </div>
   );
+};
+
+NavBar.propTypes = {
+  onSearchChange: PropTypes.func.isRequired,
+  onSortChange: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  sortBy: PropTypes.string.isRequired
 };
 
 export default NavBar;

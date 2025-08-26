@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Badge, Spinner, Alert } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaHeart, FaArrowLeft } from 'react-icons/fa';
-import { useAuth } from '../hooks/useAuth';
-import { useCart } from '../hooks/useCart';
-import { useWishlist } from '../hooks/useWishlist';
-import { useToast } from '../hooks/useToast';
+import { useToast, useCart, useWishlist, useAuth} from '../hooks/index';
+import { productAPI } from '../services/api';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -23,12 +21,8 @@ const ProductDetailPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/products/${id}`);
-        if (!response.ok) {
-          throw new Error('Không tìm thấy sản phẩm');
-        }
-        const data = await response.json();
-        setProduct(data);
+        const response = await productAPI.getById(id);
+        setProduct(response.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -64,10 +58,30 @@ const ProductDetailPage = () => {
   };
 
   const formatPrice = (price) => {
+    // Xử lý price có thể là string hoặc number
+    let numericPrice;
+    
+    if (typeof price === 'string') {
+      // Loại bỏ ký hiệu $ và các ký tự không phải số
+      const cleanPrice = price.replace(/[^0-9.-]+/g, '');
+      numericPrice = parseFloat(cleanPrice);
+      
+      // Kiểm tra nếu parseFloat trả về NaN
+      if (isNaN(numericPrice)) {
+        console.warn('Không thể parse giá:', price);
+        return 'Giá không hợp lệ';
+      }
+    } else if (typeof price === 'number') {
+      numericPrice = price;
+    } else {
+      console.warn('Kiểu dữ liệu giá không hợp lệ:', typeof price, price);
+      return 'Giá không hợp lệ';
+    }
+    
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
-    }).format(price);
+    }).format(numericPrice);
   };
 
   if (loading) {
