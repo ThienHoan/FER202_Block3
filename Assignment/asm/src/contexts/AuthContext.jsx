@@ -116,8 +116,28 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'Thông tin đăng nhập không đúng' };
       }
 
-      // Check status (allow only active when field exists)
-      if (typeof account.status === 'string' && account.status.toLowerCase() !== 'active') {
+      // Check status linh hoạt (string, boolean, number) - CHỈ DÙNG MAPPING
+      const isAccountActive = () => {
+        // Check status (boolean): true = active, false = inactive (từ mapping)
+        if (typeof account.status === 'boolean') {
+          return account.status === true;
+        }
+        
+        // Check status (number): 1 = active, 0 = inactive
+        if (typeof account.status === 'number') {
+          return account.status === 1;
+        }
+        
+        // Check status (string): "active" / "inactive"
+        if (typeof account.status === 'string') {
+          return account.status.toLowerCase() === 'active';
+        }
+        
+        // Mặc định active nếu không có trường nào
+        return true;
+      };
+
+      if (!isAccountActive()) {
         dispatch({ type: AUTH_ACTIONS.LOGIN_FAILURE });
         return { success: false, message: 'Tài khoản của bạn đang không hoạt động' };
       }

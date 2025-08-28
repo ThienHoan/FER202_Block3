@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth, useCart, useWishlist, useToast } from '../hooks/index';
 import PropTypes from 'prop-types';
 import { formatPricePreserve, toNumberPrice } from '../utils/price';
+import { resolveImageUrl } from '../utils/assets';
 
 const ProductCard = ({ product, onDecreaseStock }) => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const ProductCard = ({ product, onDecreaseStock }) => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/motorbikes/${product.id}`);
+    navigate(`/products/${product.id}`);
   };
 
   const handleViewWishlist = (e) => {
@@ -85,7 +86,7 @@ const ProductCard = ({ product, onDecreaseStock }) => {
   // Sử dụng normalized data từ config mapping
   const title = product.title || 'Không có tên';
   const brand = product.brand || 'Không có thương hiệu';
-  const image = product.image || '/images/default.jpg';
+  const image = resolveImageUrl(product.image || '/images/default.jpg');
   const price = product.price || 0;
   const salePrice = product.salePrice || null;
   const description = product.description || 'Không có mô tả';
@@ -206,6 +207,16 @@ const ProductCard = ({ product, onDecreaseStock }) => {
           >
             <FaShoppingCart className="me-1" />
             Thêm vào giỏ
+          </Button>
+
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); handleViewDetails(); }}
+            className="w-100 mb-2"
+          >
+            <FaEye className="me-1" />
+            Xem chi tiết
           </Button>
           
           {renderWishlistButton()}

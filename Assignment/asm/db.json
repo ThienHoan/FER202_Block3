@@ -1,239 +1,79 @@
 {
-  "Motorbikes": [
+  "products": [
+    
     {
-      "id": "1",
-      "brand": "Honda",
-      "model": "Winner X",
-      "year": 2022,
-      "price": "$1500",
-      "image": "/images/winnerx.jpg",
-      "description": "A sporty underbone motorbike with aggressive design and powerful engine.",
-      "stock": 10
+      "id": 1,
+      "name": "Iphone14",
+      "description": "Iphone14 smartphone with great performance and features.",
+      "price": 399,
+      "image": "images/phones/iphone14.jpg",
+      "category": "iphone"
+    },
+   
+    {
+      "id": 2,
+      "name": "Oppo Reno13",
+      "description": "Oppo Reno13 smartphone with great performance and features.",
+      "price": 549,
+      "image": "images/phones/oppo-reno13.jpg",
+      "category": "oppo"
     },
     {
-      "id": "2",
-      "brand": "Yamaha",
-      "model": "Exciter 155",
-      "year": 2023,
-      "price": "$1700",
-      "image": "/images/exciter155.jpg",
-      "description": "A performance-focused motorbike suitable for daily use and racing enthusiasts.",
-      "stock": 21
+      "id": 3,
+      "name": "Pixel7",
+      "description": "Pixel7 smartphone with great performance and features.",
+      "price": 599,
+      "image": "images/phones/pixel7.jpg",
+      "category": "google"
     },
     {
-      "id": "3",
-      "brand": "Suzuki",
-      "model": "Raider R150",
-      "year": 2021,
-      "price": "$1400",
-      "image": "/images/raider.jpg",
-      "description": "A lightweight and agile motorbike ideal for city commuting.",
-      "stock": 10
+      "id": 4,
+      "name": "Redmi Note 12",
+      "description": "Redmi Note 12 smartphone with great performance and features.",
+      "price": 649,
+      "image": "images/phones/redmi-note-12.jpg",
+      "category": "samsung"
     },
     {
-      "id": "4",
-      "brand": "Piaggio",
-      "model": "Liberty ABS",
-      "year": 2020,
-      "price": "1800$",
-      "image": "/images/liberty.jpg",
-      "description": "A premium scooter with stylish European design and ABS braking system.",
-      "stock": 11
+      "id": 5,
+      "name": "Redmi Note 8",
+      "description": "Redmi Note 8 smartphone with great performance and features.",
+      "price": 699,
+      "image": "images/phones/redmi-note-8.jpg",
+      "category": "samsung"
+    },
+    {
+      "id": 6,
+      "name": "S23",
+      "description": "S23 smartphone with great performance and features.",
+      "price": 749,
+      "image": "images/phones/s23.jpg",
+      "category": "samsung"
+    },
+    {
+      "id": 7,
+      "name": "Samsungs24 Ultra",
+      "description": "Samsungs24 Ultra smartphone with great performance and features.",
+      "price": 799,
+      "image": "images/phones/samsungS24-ultra.jpg",
+      "category": "samsung"
     }
   ],
-  "UserAccounts": [
+  "accounts": [
     {
-      "id": "1",
-      "username": "admin",
-      "password": "admin123",
-      "account_type": "admin",
-      "status": "active"
+      "email": "admin@example.com",
+      "password": "Admin123@",
+      "isActive": true
     },
     {
-      "id": "2",
-      "username": "john",
-      "password": "johnpass",
-      "account_type": "user",
-      "status": "active"
+      "email": "bobb@example.com",
+      "password": "Bobb123@",
+      "isActive": false
     },
     {
-      "id": "3",
-      "username": "jane",
-      "password": "janepass",
-      "account_type": "user",
-      "status": "inactive"
-    },
-    {
-      "id": "4",
-      "username": "guest",
-      "password": "guestpass",
-      "account_type": "guest",
-      "status": "active"
-    },
-    {
-      "id": "5",
-      "username": "admin2",
-      "email": "kali@gmail.com",
-      "password": "Tt123123@",
-      "secretQuestion": "Tên con vật nuôi đầu tiên của bạn là gì?",
-      "answer": "chó",
-      "status": "active"
-    }
-  ],
-  "orders": [
-    {
-      "id": "a786",
-      "userId": "1",
-      "items": [
-        {
-          "id": 3,
-          "title": "iPhone 13 Mini",
-          "price": 699,
-          "qty": 1,
-          "total": 699
-        },
-        {
-          "id": 6,
-          "title": "Samsung Galaxy A54",
-          "price": 399,
-          "qty": 1,
-          "total": 399
-        },
-        {
-          "id": 8,
-          "title": "Xiaomi Redmi Note 12",
-          "price": 249,
-          "qty": 1,
-          "total": 249
-        }
-      ],
-      "total": 1347,
-      "date": "2025-08-24T15:19:20.259Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "02dc",
-      "userId": "1",
-      "items": [
-        {
-          "id": "3",
-          "title": "iPhone 13 Mini",
-          "price": 699,
-          "qty": 1,
-          "total": 699
-        }
-      ],
-      "total": 699,
-      "date": "2025-08-24T15:58:34.542Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "ae47",
-      "userId": "1",
-      "items": [
-        {
-          "id": "4",
-          "title": "Samsung Galaxy S23 Ultra",
-          "price": 999,
-          "qty": 1,
-          "total": 999
-        },
-        {
-          "id": "3",
-          "title": "iPhone 13 Mini",
-          "price": 699,
-          "qty": 1,
-          "total": 699
-        }
-      ],
-      "total": 1698,
-      "date": "2025-08-24T16:10:04.717Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "1881",
-      "userId": "1",
-      "items": [
-        {
-          "id": "3",
-          "title": "iPhone 13 Mini",
-          "price": 699,
-          "qty": 2,
-          "total": 1398
-        }
-      ],
-      "total": 1398,
-      "date": "2025-08-25T04:10:36.461Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "a284",
-      "userId": "1",
-      "items": [
-        {
-          "id": "3",
-          "title": "iPhone 13 Mini",
-          "price": 699,
-          "qty": 2,
-          "total": 1398
-        },
-        {
-          "id": "7",
-          "title": "Xiaomi 13 Pro",
-          "price": 899,
-          "qty": 2,
-          "total": 1798
-        },
-        {
-          "id": "8",
-          "title": "Xiaomi Redmi Note 12",
-          "price": 249,
-          "qty": 1,
-          "total": 249
-        }
-      ],
-      "total": 3445,
-      "date": "2025-08-25T07:08:45.920Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "6d7b",
-      "userId": "3",
-      "items": [
-        {
-          "id": "2",
-          "title": "Exciter 155",
-          "price": 1700,
-          "qty": 1,
-          "total": 1700
-        }
-      ],
-      "total": 1700,
-      "date": "2025-08-25T09:12:27.262Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "29cb",
-      "userId": 5,
-      "items": [
-        {
-          "id": "4",
-          "title": "Liberty ABS",
-          "price": 1800,
-          "qty": 1,
-          "total": 1800
-        },
-        {
-          "id": "3",
-          "title": "Raider R150",
-          "price": 1400,
-          "qty": 1,
-          "total": 1400
-        }
-      ],
-      "total": 3200,
-      "date": "2025-08-26T02:04:07.920Z",
-      "status": "confirmed"
+      "email": "traltb@fe.edu.vn",
+      "password": "Traltb123@",
+      "isActive": true
     }
   ]
 }

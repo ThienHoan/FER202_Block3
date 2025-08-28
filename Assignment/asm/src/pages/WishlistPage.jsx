@@ -126,7 +126,7 @@ const WishlistPage = () => {
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => navigate(`/motorbikes/${product.id}`)}
+                      onClick={() => navigate(`/products/${product.id}`)}
                       className="w-100"
                     >
                       Xem chi tiết

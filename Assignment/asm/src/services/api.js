@@ -60,7 +60,17 @@ export const productAPI = {
   // Lấy sản phẩm theo ID
   getById: async (id) => {
     try {
-      const response = await api.get(`${API_ENDPOINTS.products}/${id}`);
+      // Xử lý ID linh hoạt - thử cả string và number
+      let response;
+      try {
+        // Thử với ID gốc (có thể là string hoặc number)
+        response = await api.get(`${API_ENDPOINTS.products}/${id}`);
+      } catch (error) {
+        // Nếu thất bại, thử chuyển đổi ID
+        const convertedId = typeof id === 'string' ? parseInt(id, 10) : String(id);
+        response = await api.get(`${API_ENDPOINTS.products}/${convertedId}`);
+      }
+      
       // Normalize single product
       const normalizedData = normalizeData(response.data, 'products');
       return { ...response, data: normalizedData };
@@ -86,7 +96,15 @@ export const productAPI = {
   // Cập nhật sản phẩm (PATCH)
   update: async (id, partial) => {
     try {
-      const response = await api.patch(`${API_ENDPOINTS.products}/${id}`, partial);
+      // Xử lý ID linh hoạt
+      let response;
+      try {
+        response = await api.patch(`${API_ENDPOINTS.products}/${id}`, partial);
+      } catch (error) {
+        const convertedId = typeof id === 'string' ? parseInt(id, 10) : String(id);
+        response = await api.patch(`${API_ENDPOINTS.products}/${convertedId}`, partial);
+      }
+      
       const normalizedData = normalizeData(response.data, 'products');
       return { ...response, data: normalizedData };
     } catch (error) {
@@ -126,7 +144,15 @@ export const accountAPI = {
   // Cập nhật tài khoản
   update: async (id, accountData) => {
     try {
-      const response = await api.put(`${API_ENDPOINTS.accounts}/${id}`, accountData);
+      // Xử lý ID linh hoạt
+      let response;
+      try {
+        response = await api.put(`${API_ENDPOINTS.accounts}/${id}`, accountData);
+      } catch (error) {
+        const convertedId = typeof id === 'string' ? parseInt(id, 10) : String(id);
+        response = await api.put(`${API_ENDPOINTS.accounts}/${convertedId}`, accountData);
+      }
+      
       // Normalize updated account
       const normalizedData = normalizeData(response.data, 'accounts');
       return { ...response, data: normalizedData };
@@ -139,7 +165,13 @@ export const accountAPI = {
   // Xóa tài khoản
   delete: async (id) => {
     try {
-      return await api.delete(`${API_ENDPOINTS.accounts}/${id}`);
+      // Xử lý ID linh hoạt
+      try {
+        return await api.delete(`${API_ENDPOINTS.accounts}/${id}`);
+      } catch (error) {
+        const convertedId = typeof id === 'string' ? parseInt(id, 10) : String(id);
+        return await api.delete(`${API_ENDPOINTS.accounts}/${convertedId}`);
+      }
     } catch (error) {
       console.error(`Error deleting account ${id}:`, error);
       throw error;

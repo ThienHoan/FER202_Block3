@@ -7,8 +7,8 @@ export const DATA_MAPPING = {
   products: {
     // Các trường cơ bản
     id: 'id',                           // ID sản phẩm
-    title: 'model',                     // Tên sản phẩm: Winner X, Exciter 155, Raider R150, Liberty ABS
-    brand: 'brand',                     // Thương hiệu: Honda, Yamaha, Suzuki, Piaggio
+    title: 'name',                     // Tên sản phẩm: Winner X, Exciter 155, Raider R150, Liberty ABS
+    brand: 'category',                  // Thương hiệu: Honda, Yamaha, Suzuki, Piaggio
     image: 'image',                     // Hình ảnh: /images/winnerx.jpg, /images/exciter155.jpg
     price: 'price',                     // Giá gốc: $1500, $1700, $1400, $1800
     salePrice: 'salePrice',             // Giá sale (nếu có)
@@ -54,7 +54,7 @@ export const DATA_MAPPING = {
     address: 'address',                 // Địa chỉ
     avatar: 'avatar',                   // Ảnh đại diện
     role: 'role',                       // Vai trò (user, admin, etc.)
-    status: 'status',                   // Trạng thái: active, inactive
+    status: 'isActive',                   // Trạng thái: true = active, false = inactive
     accountType: 'account_type',        // Loại tài khoản: admin, user, guest
     createdAt: 'createdAt',             // Ngày tạo
     lastLogin: 'lastLogin',             // Lần đăng nhập cuối
@@ -92,10 +92,10 @@ export const DATA_MAPPING = {
 // API Endpoints mapping
 export const API_ENDPOINTS = {
   // Endpoints cho sản phẩm
-  products: '/Motorbikes',                // Thay đổi từ /products thành /Motorbikes
+  products: '/products',                // Thay đổi từ /products thành /Motorbikes
   
   // Endpoints cho tài khoản
-  accounts: '/UserAccounts',              // Thay đổi từ /accounts thành /UserAccounts
+  accounts: '/accounts',              // Thay đổi từ /accounts thành /UserAccounts
   
   // Endpoints cho đơn hàng
   orders: '/orders'                       // Giữ nguyên
@@ -166,7 +166,15 @@ export const normalizeData = (data, entityType = 'products') => {
   // Map tất cả các trường
   Object.keys(mapping).forEach(key => {
     const fieldName = mapping[key];
-    normalized[key] = data[fieldName] !== undefined ? data[fieldName] : (defaults?.[key] || null);
+    let value = data[fieldName] !== undefined ? data[fieldName] : (defaults?.[key] || null);
+    
+    // Xử lý ID linh hoạt (string hoặc number)
+    if (key === 'id' && value !== null) {
+      // Chuyển ID về string để nhất quán
+      normalized[key] = String(value);
+    } else {
+      normalized[key] = value;
+    }
   });
   
   return normalized;

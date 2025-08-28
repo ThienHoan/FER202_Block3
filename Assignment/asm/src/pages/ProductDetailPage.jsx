@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaHeart, FaArrowLeft } from 'react-icons/fa';
 import { useToast, useCart, useWishlist, useAuth} from '../hooks/index';
 import { productAPI } from '../services/api';
+import { resolveImageUrl } from '../utils/assets';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -136,7 +137,7 @@ const ProductDetailPage = () => {
             <div className="position-relative">
               <Card.Img
                 variant="top"
-                src={product.image}
+                src={resolveImageUrl(product.image)}
                 alt={product.title}
                 style={{ height: '400px', objectFit: 'cover' }}
               />
